@@ -132,6 +132,7 @@ def main():
             diff_peek = dict(default=None),
             validate = dict(required=False, default=None),
             src = dict(required=False, default=None),
+            context= dict(required=False, default=None),
         ),
         add_file_common_args=True,
         supports_check_mode=True

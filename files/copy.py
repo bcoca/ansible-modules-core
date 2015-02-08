@@ -148,6 +148,7 @@ def main():
             backup            = dict(default=False, type='bool'),
             force             = dict(default=True, aliases=['thirsty'], type='bool'),
             validate          = dict(required=False, type='str'),
+            context           = dict(required=False, default=None),
             directory_mode    = dict(required=False)
         ),
         add_file_common_args=True,

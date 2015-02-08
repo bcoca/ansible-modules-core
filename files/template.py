@@ -47,6 +47,12 @@ options:
     required: false
     default: ""
     version_added: "1.2"
+  context:
+    description:
+      - A dictionary (key=>value pairs) in which the keys become variables avilable to the template.
+    required: false
+    default: {}
+    version_added: "1.9"
 notes:
   - "Since Ansible version 0.9, templates are loaded with C(trim_blocks=True)."
 requirements: []
