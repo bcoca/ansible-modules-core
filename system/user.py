@@ -549,8 +549,8 @@ class User(object):
             return passwd
         else:
             # Read shadow file for user's encrypted password string
-            if os.path.exists(self.SHADOWFILE) and os.access(self.SHADOWFILE, os.R_OK):
-                for line in open(self.SHADOWFILE).readlines():
+            if os.path.exists(self.__class__.SHADOWFILE) and os.access(self.__class__.SHADOWFILE, os.R_OK):
+                for line in open(self.__class__.SHADOWFILE).readlines():
                     if line.startswith('%s:' % self.name):
                         passwd = line.split(':')[1]
         return passwd
