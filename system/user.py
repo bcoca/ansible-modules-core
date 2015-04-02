@@ -1512,7 +1512,6 @@ class DarwinUser(User):
         plist_file = '/Library/Preferences/com.apple.loginwindow.plist'
 
         # http://support.apple.com/kb/HT5017?viewlocale=en_US
-        uid = int(self.uid)
         cmd = [ 'defaults', 'read', plist_file, 'HiddenUsersList' ]
         (rc, out, err) = self.execute_command(cmd)
         # returned value is
