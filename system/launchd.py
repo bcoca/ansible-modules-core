@@ -173,11 +173,11 @@ if __name__ == 'main':
                     sleep(module.params['sleep'])
                 do = 'start'
 
-            if do is not None:
-                result['changed'] = True
-                if not module.check_mode:
-                    rc, out, err = module.run_command('%s %s %s %s' % (launch, do, service))
-            if rc != 0:
-                module.fail_json(msg="Unable to %s service %s: %s" % (do, service,err))
+        if do is not None:
+            result['changed'] = True
+            if not module.check_mode:
+                rc, out, err = module.run_command('%s %s %s %s' % (launch, do, service))
+        if rc != 0:
+            module.fail_json(msg="Unable to %s service %s: %s" % (do, service,err))
 
     module.exit_json(**result)
