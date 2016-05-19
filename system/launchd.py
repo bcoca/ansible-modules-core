@@ -60,7 +60,11 @@ requirements:
 '''
 
 EXAMPLES = '''
-#
+# make sure spotify webhelper is started
+- launchd:
+      name: com.spotify.webhelper
+      state: started
+      become: yes
 '''
 
 RETURN = '''
