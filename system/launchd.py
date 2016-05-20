@@ -101,8 +101,7 @@ def find_service_plist(service_name):
             if filename == '%s.plist' % service_name:
                 return os.path.join(path, filename)
 
-if __name__ == 'main':
-
+def main():
     # init
     module = AnsibleModule(
         argument_spec = dict(
@@ -146,7 +145,10 @@ if __name__ == 'main':
     if module.params['enabled'] is not None:
         plist_file = find_service_plist(service)
         if plist_file is None:
-            module.fail_json(msg='unable to infer the path of %s service plist file' % service)
+            msg='unable to infer the path of %s service plist file' % service
+            if not found:
+                msg += ' and it was not found among active services'
+            module.fail_json(msg=msg)
 
         # Launchctl does not expose functionalities to set the RunAtLoad
         # attribute of a job definition. So we parse and modify the job definition
@@ -182,6 +184,12 @@ if __name__ == 'main':
             if not module.check_mode:
                 rc, out, err = module.run_command('%s %s %s %s' % (launch, do, service))
         if rc != 0:
-            module.fail_json(msg="Unable to %s service %s: %s" % (do, service,err))
+            msg="Unable to %s service %s: %s" % (do, service,err)
+            if not found:
+                msg += '\nAlso the service was not found among active services'
+            module.fail_json(msg=msg)
 
     module.exit_json(**result)
+
+if __name__ == 'main':
+    main()
