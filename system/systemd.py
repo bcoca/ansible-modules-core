@@ -247,10 +247,28 @@ def main():
         module.fail_json(msg='failure %d running systemctl show for %r: %s' % (rc, unit, err))
 
     # load return of systemctl show into dictionary for easy access and return
-    for line in out.split('\n'):
-        if line.strip() and '=' in line:
-            k,v = line.split('=', 1)
-            result['status'][k] = v.strip()
+    k = None
+    multival = []
+    for line in out.split('\n'): # systemd can have multiline values delimited with {}
+        if line.strip():
+            if k is None:
+                if '=' in line:
+                    k,v = line.split('=', 1)
+                    if v.lstrip().startswith('{'):
+                        if not v.rstrip().endswith('}'):
+                            multival.append(line)
+                            continue
+                    result['status'][k] = v.strip()
+                    k = None
+            else:
+                if line.rstrip().endswith('}'):
+                    result['status'][k] = '\n'.join(multival).strip()
+                    multival = []
+                    k = None
+                else:
+                    multival.append(line)
+
+
 
     if 'LoadState' in result['status'] and result['status']['LoadState'] == 'not-found':
         module.fail_json(msg='Could not find the requested service "%r": %s' % (unit, err))
