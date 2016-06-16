@@ -32,6 +32,8 @@ import signal
 import time
 import syslog
 
+# Backwards compat.  There were present in basic.py before
+from ansible.module_utils.pycompat24 import get_exception
 
 syslog.openlog('ansible-%s' % os.path.basename(__file__))
 syslog.syslog(syslog.LOG_NOTICE, 'Invoked with %s' % " ".join(sys.argv[1:]))
@@ -47,9 +49,8 @@ def daemonize_self():
             # exit first parent
             sys.exit(0)
     except OSError:
-        e         = get_exception()
-        sys.stderr.write("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
-        sys.exit(1)
+        e = get_exception()
+        sys.exit("fork #1 failed: %d (%s)\n" % (e.errno, e.strerror))
 
     # decouple from parent environment
     os.chdir("/")
@@ -64,8 +65,7 @@ def daemonize_self():
             sys.exit(0)
     except OSError:
         e = get_exception()
-        sys.stderr.write("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
-        sys.exit(1)
+        sys.exit("fork #2 failed: %d (%s)\n" % (e.errno, e.strerror))
 
     dev_null = file('/dev/null','rw')
     os.dup2(dev_null.fileno(), sys.stdin.fileno())
@@ -200,11 +200,7 @@ if __name__ == '__main__':
                 sys.exit(0)
 
     except SystemExit:
-        # On python2.4, SystemExit is a subclass of Exception.
-        # This block makes python2.4 behave the same as python2.5+
-        e = get_exception()
-        sys.exit(e.code)
-
+        raise # keep 2.4 and other python behavior the same
     except Exception:
         e = get_exception()
         notice("error: %s"%(e))
