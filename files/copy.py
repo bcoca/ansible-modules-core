@@ -92,17 +92,6 @@ options:
     version_added: "1.8"
     description:
       - 'This flag indicates that filesystem links, if they exist, should be followed.'
-  unsafe_writes:
-    description:
-     -  Normally this module uses atomic operations to prevent data corruption or inconsistent reads from the target files,
-        sometimes systems are configured or just broken in ways that prevent this. One example are docker mounted files,
-        they cannot be updated atomically and can only be done in an unsafe manner.
-     -  This option allows ansible to fall back to unsafe methods of updating files for those cases in which you do not have any other choice.
-        Be aware that this is subject to race conditions and can lead to data corruption.
-    choices: [ "yes", "no" ]
-    required: false
-    default: "no"
-    version_added: "2.2"
 extends_documentation_fragment:
     - files
     - validate
@@ -235,7 +224,6 @@ def main():
             validate          = dict(required=False, type='str'),
             directory_mode    = dict(required=False),
             remote_src        = dict(required=False, type='bool'),
-            unsafe_writes     = dict(required=False, type='bool'),
         ),
         add_file_common_args=True,
         supports_check_mode=True,
