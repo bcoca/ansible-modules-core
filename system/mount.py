@@ -326,7 +326,7 @@ def mount(module, args):
     cmd = [mount_bin]
 
     if ismount(name):
-        return remount(module, mount_bin, **args)
+        return remount(module, mount_bin, args)
 
     cmd += _set_fstab_args(args)
 
@@ -353,7 +353,7 @@ def umount(module, dest):
     else:
         return rc, out+err
 
-def remount(module, mount_bin, **args):
+def remount(module, mount_bin, args):
     ''' will try to use -o remount first and fallback to unmount/mount if unsupported'''
     msg = ''
     cmd = [mount_bin]
@@ -373,9 +373,9 @@ def remount(module, mount_bin, **args):
     if rc != 0:
         msg = out+err
         if ismount(args['name']):
-            rc,msg = umount(module, **args)
+            rc,msg = umount(module, args)
         if rc == 0:
-            rc,msg = mount(module, **args)
+            rc,msg = mount(module, args)
     return rc, msg
 
 # Note if we wanted to put this into module_utils we'd have to get permission
