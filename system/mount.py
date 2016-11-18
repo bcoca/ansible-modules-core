@@ -308,7 +308,7 @@ def unset_mount(module, args):
 
     return (args['name'], changed)
 
-def _set_fstab_args(**args):
+def _set_fstab_args(args):
     result = []
     if 'fstab' in args and args['fstab'] != '/etc/fstab':
         if get_platform().lower().endswith('bsd'):
